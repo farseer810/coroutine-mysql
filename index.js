@@ -1,6 +1,6 @@
 var mysql = require('mysql');
 var Connection = require('./connection');
-var Pool = require('./Pool');
+var Pool = require('./pool');
 
 function createConnection(options)
 {
