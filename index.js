@@ -5,29 +5,29 @@ var Pool = require('./pool');
 function createConnection(options)
 {
 
-	return new Promise(resolve, reject){
+	return new Promise(function(resolve, reject){
 		var connection = mysql.createConnection(options);
 		connection.connect(function(err){
 			if(err)
-				reject(err);
-			resolve(new Connection(connection));
+				return reject(err);
+			return resolve(new Connection(connection));
 		});
-	};
+	});
 }
 
 function createPool(options)
 {
-	return new Promise(resolve, reject){
+	return new Promise(function(resolve, reject){
 		var pool = mysql.createPool(options);
 		try
 		{
-			resolve(new Pool(pool));
+			return resolve(new Pool(pool));
 		}
 		catch(err)
 		{
-			reject(err);
+			return reject(err);
 		}
-	};
+	});
 }
 
 exports.createConnection = createConnection;

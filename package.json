@@ -1,6 +1,6 @@
 {
   "name": "coroutine-mysql",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This's a node package for wrapping mysql apis with promise, which is for \"co programming\" eventually.",
   "main": "index.js",
   "scripts": {

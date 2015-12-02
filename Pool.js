@@ -7,23 +7,25 @@ function Pool(pool)
 }
 
 Pool.prototype.getConnection = function(){
-	return new Promise(resolve, reject){
-		this._pool.getConnection(function(err, connection){
+	var ctx = this;
+	return new Promise(function(resolve, reject){
+		ctx._pool.getConnection(function(err, connection){
 			if(err)
-				reject(err);
-			resolve(new Connection(connection));
+				return reject(err);
+			return resolve(new Connection(connection));
 		});
-	};
+	});
 };
 
 Pool.prototype.end = function(){
-	return new Promise(resolve, reject){
-		this._pool.end(function(err){
+	var ctx = this;
+	return new Promise(function(resolve, reject){
+		ctx._pool.end(function(err){
 			if(err)
-				reject(err);
-			resolve(this);
+				return reject(err);
+			return resolve(ctx);
 		});
-	};
+	});
 };
 
 
