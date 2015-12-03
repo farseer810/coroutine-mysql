@@ -121,6 +121,7 @@ co(function*(){
 
 
 ## Connections
+Similar to Pool, parameter "options" is also compatible.
 
 APIs:
 ```js
@@ -129,7 +130,7 @@ mysql.createConnection(options) => Connection;  //create a connection
 Connection.end() => Connection;  //end the connection
 Connection.release() => Connection;  //release the connection back to the pool
 Connection.destroy() => Connection;  //destroy the connection
-Connection.select(sqlString, vars) => results;  //
+Connection.select(sqlString, vars) => results;  
 Connection.insert(tableName, vars) => inserted id;
 Connection.delete(tableName, whereClause, whereVars) => affected rows;
 Connection.update(tableName, vars, whereClause, whereVars) => changed rows;
@@ -139,14 +140,165 @@ Connection.commit() => Connection;
 Connection.rollback() => Connection;
 ```
 
-### Select
+To create a connection and to terminate one:
+```js
+co(function*(){
+	var conn = yield mysql.createConnection({
+		host: 'localhost',
+		user: 'me',
+		password: 'secret',
+		database: 'my_db'
+	});
 
-### Insert
+	// some code using the connection
 
-### Delete
+	yield conn.end();
+});
+```
 
-### Update
 
-### Query
+## Select
+Method "select" in Connection.
 
-### Transaction
+APIs:
+```js
+Connection.select(sqlString, vars) => results; 
+```
+
+Params: 
+* 'sqlString': a String represents the sql statement with variables
+* 'vars': OPTIONAL, a Object of variables
+
+```js
+co(function*(){
+	var connection = yield mysql.createConnection(options);
+	var results = yield connection.select('show databases');
+	console.log(results);
+	var sql = 'select title from post where id>:post_id';
+	results = yield connection.select(sql, {post_id: 2});
+	console.log(results);
+	yield connection.end();
+});
+```
+
+
+## Insert
+Method "insert" in Connection.
+
+APIs:
+```js
+Connection.insert(tableName, vars) => inserted id;
+```
+
+Params: 
+* 'tableName': the name of the table
+* 'vars': a Object of variables to be inserted
+
+```js
+co(function*(){
+	var connection = yield mysql.createConnection(options);
+	var results = yield connection.insert('post', {title: 'new title'});
+	console.log('inserted id: ' + results);
+	yield connection.end();
+});
+```
+
+
+## Delete
+Method "delete" in Connection.
+
+APIs:
+```js
+Connection.delete(tableName, whereClause, whereVars) => affected rows;
+```
+
+Params: 
+* 'tableName': the name of the table
+* 'whereClause': OPTIONAL, a String represents the "WHERE" clause
+* 'whereVars': OPTIONAL, a Object of variables for whereClause
+
+```js
+co(function*(){
+	var connection = yield mysql.createConnection(options);
+	var results = yield connection.delete('post', 'id=:id_to_be_delete', {id_to_be_delete: 1});
+	console.log('deleted rows: ' + results);
+	yield connection.end();
+});
+```
+
+
+## Update
+Method "update" in Connection.
+
+APIs:
+```js
+Connection.update(tableName, vars, whereClause, whereVars) => changed rows;
+```
+
+Params: 
+* 'tableName': the name of the table
+* 'vars': a Object of variables to be updated
+* 'whereClause': OPTIONAL, a String represents the "WHERE" clause
+* 'whereVars': OPTIONAL, a Object of variables for whereClause
+
+```js
+co(function*(){
+	var connection = yield mysql.createConnection(options);
+	var results = yield connection.update('post', 'id=:id_to_be_delete', {id_to_be_delete: 1});
+	console.log('changed rows: ' + results);
+	yield connection.end();
+});
+```
+
+
+## Query
+Method "query" in Connection.
+
+APIs:
+```js
+Connection.query(sqlString, vars) => results;
+```
+
+Params: 
+* 'sqlString': a String represents the sql statement with variables
+* 'vars': OPTIONAL, a Object of variables
+
+```js
+co(function*(){
+	var connection = yield mysql.createConnection(options);
+	var sql = "select * from post where id>(select AVG(id) from post)";
+	var results = yield connection.query(sql);
+	console.log(results);
+	yield connection.end();
+});
+```
+
+
+## Transaction
+Methods for using transaction.
+
+APIs:
+```js
+Connection.transaction() => Connection;
+Connection.commit() => Connection;
+Connection.rollback() => Connection;
+```
+
+```js
+co(function*(){
+	var connection = yield mysql.createConnection(options);
+
+	yield connection.transaction();
+	try
+	{
+		var lastId = yield connection.insert('post', {title: 'new title'});
+		yield connction.delete('post', 'id<:id', {id: lastId - 1});
+		yield connection.commit();
+	}
+	catch(err)
+	{
+		yield connection.rollback();
+	}
+	yield connection.end();
+});
+```
