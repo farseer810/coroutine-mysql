@@ -49,7 +49,18 @@ Connection.prototype.end = function() {
  * @api public
  */
 Connection.prototype.release = function() {
-    this._connection.release();
+    var ctx = this;
+    return new Promise(function(resolve, reject) {
+        try
+        {
+            ctx._connection.release();
+            return resolve(ctx);
+        }
+        catch(err)
+        {
+            return reject(err);
+        }
+    });
 };
 
 
@@ -62,7 +73,18 @@ Connection.prototype.release = function() {
  * @api public
  */
 Connection.prototype.destroy = function() {
-    this._connection.destroy();
+    var ctx = this;
+    return new Promise(function(resolve, reject) {
+        try
+        {
+            ctx._connection.destroy();
+            return resolve(ctx);
+        }
+        catch(err)
+        {
+            return reject(err);
+        }
+    });
 }
 
 

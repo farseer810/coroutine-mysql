@@ -1,23 +1,29 @@
-var mysql = require('../index');
+var mysql = require('..');
 var co = require('co');
-
-co(function*() {
-    var conn = yield mysql.createConnection({
+co(function*(){
+    var pool = yield mysql.createPool({
         host: 'localhost',
         user: 'root',
         password: '123456',
-        database: 'test'
+        database: 'test',
+        connectionLimit : 10
     });
-    try {
-        var results = yield conn.insert('post', {title: 'valentine'});
+    var connection = yield pool.getConnection();
+    try
+    {
+        var sql = "select * from post where id>:id"
+        var results = yield connection.select(sql, {id: 20});
         console.log(results);
-    } catch (e) {
-    	console.log(e);
     }
+    catch(err)
+    {
+        console.log(err);
+    }
+    yield connection.release();
+    yield pool.end();
 
-    yield conn.end();
-
-}).catch(function(err) {
-    console.log('error: ');
-    console.log(err);
+}).then(function(){
+    // Some code on success
+}).catch(function(err){
+    // Some code on failures
 });

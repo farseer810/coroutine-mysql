@@ -1,11 +1,11 @@
 # coroutine-mysql
 ## Table of contents
-- [Install](#install)
+- [Installation](#install)
 - [Introduction](#introduction)
 - [Connection pool](#connection-pool)
 - [Establishing connections](#establishing-connections)
 
-## Install
+## Installation
 ```sh
 $ npm install coroutine-mysql
 ```
@@ -24,7 +24,7 @@ Here is an example on how to use it:
 var mysql = require('coroutine-mysql');
 var co = require('co');
 co(function*(){
-	var connection = yield mysql.createConnection({\
+	var connection = yield mysql.createConnection({
 		host: 'localhost',
 		user: 'me',
 		password: 'secret',
@@ -53,7 +53,56 @@ co(function*(){
 
 
 ## Connection pool
+Since the Pool class in this module is a simple wrap on the Pool class in node-mysql, the parameter "options" is compatible.
 
+To create a connection pool and to terminate one:
+```js
+co(function*(){
+	var pool = yield mysql.createPool({
+		host: 'localhost',
+		user: 'me',
+		password: 'secret',
+		database: 'my_db',
+		connectionLimit : 10
+	});
+	yield pool.end();
+});
+```
+
+Here's a full example:
+```js
+var mysql = require('coroutine-mysql');
+var co = require('co');
+co(function*(){
+	var pool = yield mysql.createPool({
+		host: 'localhost',
+		user: 'me',
+		password: 'secret',
+		database: 'my_db',
+		connectionLimit : 10
+	});
+
+	//To get a connection for the pool
+	var connection = yield pool.getConnection();
+	try
+	{
+		var sql = "select * from post where id>:id"
+		var results = yield connection.select(sql, {id: 2});
+		console.log(results);
+	}
+	catch(err)
+	{
+		console.log(err);
+	}
+	yield connection.release();
+	yield pool.end();
+
+}).then(function(){
+	// Some code on success
+}).catch(function(err){
+	// Some code on failures
+});
+```
 
 
 ## Establishing connections
