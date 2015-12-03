@@ -1,29 +1,27 @@
 var mysql = require('..');
 var co = require('co');
 co(function*(){
-    var pool = yield mysql.createPool({
+    var connection = yield mysql.createConnection({
         host: 'localhost',
-        user: 'root',
-        password: '123456',
-        database: 'test',
-        connectionLimit : 10
+        user: 'me',
+        password: 'secret',
+        database: 'my_db'
     });
-    var connection = yield pool.getConnection();
+    
+    console.log('transaction');
+    yield connection.transaction();
     try
     {
-        var sql = "select * from post where id>:id"
-        var results = yield connection.select(sql, {id: 20});
-        console.log(results);
+        console.log('insert');
+        var lastId = yield connection.insert('post', {title: 'new title'});
+        console.log('delete');
+        yield connection.delete('post', 'id<:id', {id: lastId - 2});
+        yield connection.commit();
     }
     catch(err)
     {
         console.log(err);
+        yield connection.rollback();
     }
-    yield connection.release();
-    yield pool.end();
-
-}).then(function(){
-    // Some code on success
-}).catch(function(err){
-    // Some code on failures
+    yield connection.end();
 });

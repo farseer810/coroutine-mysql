@@ -236,7 +236,7 @@ Connection.prototype.query = function(sqlString, vars) {
 Connection.prototype.transaction = function() {
     var ctx = this;
     return new Promise(function(resolve, reject) {
-        ctx._connection.transaction(function(err) {
+        ctx._connection.beginTransaction(function(err) {
             if (err)
                 return reject(err);
             return resolve(ctx);
