@@ -3,7 +3,13 @@
 - [Installation](#install)
 - [Introduction](#introduction)
 - [Connection pool](#connection-pool)
-- [Establishing connections](#establishing-connections)
+- [Connections](#connections)
+- [Select](#select)
+- [Insert](#insert)
+- [Delete](#delete)
+- [Update](#update)
+- [Query](#query)
+- [Transaction](#transaction)
 
 ## Installation
 ```sh
@@ -105,4 +111,16 @@ co(function*(){
 ```
 
 
-## Establishing connections
+## Connections
+
+## Select
+
+## Insert
+
+## Delete
+
+## Update
+
+## Query
+
+## Transaction
