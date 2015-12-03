@@ -263,6 +263,7 @@ Connection.prototype.commit = function() {
     });
 };
 
+
 /**
  * Perform ROLLBACK.
  * 
