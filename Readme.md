@@ -61,6 +61,15 @@ co(function*(){
 ## Connection pool
 Since the Pool class in this module is a simple wrap on the Pool class in node-mysql, the parameter "options" is compatible.
 
+APIs:
+```
+mysql.createPool(options) => Pool;
+
+Pool.getConnection() => Connection;
+Pool.end() => Pool;
+```
+
+
 To create a connection pool and to terminate one:
 ```js
 co(function*(){
@@ -112,6 +121,22 @@ co(function*(){
 
 
 ## Connections
+APIs:
+```
+mysql.createConnection(options) => Connection;
+
+Connection.end() => Connection;
+Connection.release() => Connection;
+Connection.destroy() => Connection;
+Connection.select() => results;
+Connection.insert() => inserted id;
+Connection.delete() => affected rows;
+Connection.update() => changed rows;
+Connection.query() => results;
+Connection.transaction() => Connection;
+Connection.commit() => Connection;
+Connection.rollback() => Connection;
+```
 
 ## Select
 
