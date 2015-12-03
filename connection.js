@@ -202,4 +202,60 @@ Connection.prototype.query = function(sqlString, vars) {
     });
 };
 
+
+/**
+ * Wrap the "beginTransaction" method of the connection object.
+ * Begin a transaction.
+ * 
+ * @param none
+ * @return {Promise}
+ * @api public
+ */
+Connection.prototype.transaction = function() {
+    var ctx = this;
+    return new Promise(function(resolve, reject) {
+        ctx._connection.transaction(function(err) {
+            if (err)
+                return reject(err);
+            return resolve(ctx);
+        });
+    });
+};
+
+
+/**
+ * Perform COOMIT.
+ * 
+ * @param none
+ * @return {Promise}
+ * @api public
+ */
+Connection.prototype.commit = function() {
+    var ctx = this;
+    return new Promise(function(resolve, reject) {
+        ctx._connection.commit(function(err) {
+            if (err)
+                return reject(err);
+            return resolve(ctx);
+        });
+    });
+};
+
+/**
+ * Perform ROLLBACK.
+ * 
+ * @param none
+ * @return {Promise}
+ * @api public
+ */
+Connection.prototype.rollback = function() {
+    var ctx = this;
+    return new Promise(function(resolve, reject) {
+        ctx._connection.rollback(function(err) {
+            if (err)
+                return reject(err);
+            return resolve(ctx);
+        });
+    });
+};
 module.exports = Connection;
