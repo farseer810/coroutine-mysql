@@ -9,7 +9,7 @@ co(function*() {
         database: 'test'
     });
     try {
-        var results = yield conn.select('select * from postt where id>:id', {id: 2});
+        var results = yield conn.insert('post', {title: 'valentine'});
         console.log(results);
     } catch (e) {
     	console.log(e);
