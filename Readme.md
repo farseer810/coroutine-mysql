@@ -62,11 +62,11 @@ co(function*(){
 Since the Pool class in this module is a simple wrap on the Pool class in node-mysql, the parameter "options" is compatible.
 
 APIs:
-```
-mysql.createPool(options) => Pool;
+```js
+mysql.createPool(options) => Pool; //create a connection pool
 
-Pool.getConnection() => Connection;
-Pool.end() => Pool;
+Pool.getConnection() => Connection;  //get a connection from the pool
+Pool.end() => Pool;  //terminate the pool
 ```
 
 
@@ -121,31 +121,32 @@ co(function*(){
 
 
 ## Connections
-APIs:
-```
-mysql.createConnection(options) => Connection;
 
-Connection.end() => Connection;
-Connection.release() => Connection;
-Connection.destroy() => Connection;
-Connection.select() => results;
-Connection.insert() => inserted id;
-Connection.delete() => affected rows;
-Connection.update() => changed rows;
-Connection.query() => results;
+APIs:
+```js
+mysql.createConnection(options) => Connection;  //create a connection
+
+Connection.end() => Connection;  //end the connection
+Connection.release() => Connection;  //release the connection back to the pool
+Connection.destroy() => Connection;  //destroy the connection
+Connection.select(sqlString, vars) => results;  //
+Connection.insert(tableName, vars) => inserted id;
+Connection.delete(tableName, whereClause, whereVars) => affected rows;
+Connection.update(tableName, vars, whereClause, whereVars) => changed rows;
+Connection.query(sqlString, vars) => results;
 Connection.transaction() => Connection;
 Connection.commit() => Connection;
 Connection.rollback() => Connection;
 ```
 
-## Select
+### Select
 
-## Insert
+### Insert
 
-## Delete
+### Delete
 
-## Update
+### Update
 
-## Query
+### Query
 
-## Transaction
+### Transaction
